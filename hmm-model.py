@@ -7,6 +7,58 @@ import hmmlearn.hmm
 
 NUM_CLASS = 3
 
+init_data = {}
+init_data['start']
+init_data['trans']
+init_data['start']['nguoi'] = [1, 0, 0]
+init_data['start']['khong'] = [1, 0, 0]
+init_data['start']['nhieu'] = [1, 0, 0, 0]
+init_data['start']['tien'] = [1, 0, 0, 0]
+init_data['start']['thoigian'] = [1, 0, 0, 0, 0, 0]
+
+init_data['trans']['nguoi'] = [[0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0],
+[0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0],
+[0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0],
+[0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0],
+[0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0],
+[0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0],
+[0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1],
+[0, 0, 0, 0, 0, 0, 0, 0.5, 0.5],
+[0, 0, 0, 0, 0, 0, 0, 0, 1]]
+init_data['trans']['khong'] = init_data['trans']['nguoi']
+init_data['trans']['nhieu'] = [[0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.5],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]
+init_data['trans']['tien'] = init_data['nhieu']
+init_data['trans']['thoigian'] = [[0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.4, 0.1],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.5]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]
+
 def get_mfcc(file_path):
 	y, sr = librosa.load(file_path) # read .wav file
 	hop_length = math.floor(sr*0.010) # 10ms hop
@@ -42,12 +94,29 @@ def get_init(class_name):
 	num_phonemic = int(file.readline())
 	file.readline()
 	file.readline()
-	start_prob = '\t'.join(file.readline().split())
+	start_prob = file.readline().split('\t')
+	start_prob_ = []
+	for s in start_prob:
+		start_prob_.append(float(s.replace('\n', '')))
+	print(class_name)
+	print(start_prob_)
 	file.readline()
 	file.readline()
+	transmat = []
+	for i in range(num_phonemic * 3):
+		print(i)
+		line = file.readline().split('\t')
+		line_ = []
+		for l in line:
+			ll = l.replace('\n', '')
+			print(ll)
+			line_.append(float(ll))
+		print(line_)
+		transmat.append(line_)
+	return start_prob, transmat
 
 if __name__ == "__main__":
-	class_names = ["nguoi", "khong", "tien", "test_nguoi", "test_khong", "test_tien"]
+	class_names = ["nguoi", "khong", "nhieu", "tien", "thoigian", "test_nguoi", "test_khong", "test_nhieu", "test_tien", "test_thoigian"]
 	dataset = {}
 	for cname in class_names:
 		print(f"Load {cname} dataset")
@@ -69,9 +138,9 @@ if __name__ == "__main__":
 		# O^r size T x 1
 		dataset[cname] = list([kmeans.predict(v).reshape(-1,1) for v in dataset[cname]])
 		
+		transmat = np.array()
+
 		if cname[:4] != 'test':
-
-
 			hmm = hmmlearn.hmm.MultinomialHMM(
 				n_components=6, random_state=0, n_iter=1000, verbose=True,
 				startprob_prior=np.array([0.7,0.2,0.1,0.0,0.0,0.0]),
