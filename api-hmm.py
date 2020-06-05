@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 import tkinter as tk
 from tkinter import messagebox
 import pygame
-from pydub import AudioSegment
+from pydub import AudioSegment, silence
 import ffmpeg
 import pyaudio
 import wave
@@ -21,7 +21,7 @@ from base64 import b64decode
 class_names = ['khong', 'nhieu', 'thoigian', 'nguoi', 'tien']
 n_states = [9, 12, 19, 12, 12]
 # build data
-path = 'data/'
+path = 'datax/'
 # path = '/Users/bangdo/code/school/speech_processing/speech_processing/test/trimmed'
 def get_mfcc(filename):
 	y, sr = librosa.load(filename) # read .wav file
@@ -135,7 +135,7 @@ def test_one_file(file_):
 	print(class_names[pred])
 
 
-def detect_leading_silence(sound, silence_threshold=-42.0, chunk_size=10):
+def detect_leading_silence(sound, silence_threshold=-30.0, chunk_size=10):
 	'''
 	sound is a pydub.AudioSegment
 	silence_threshold in dB
@@ -191,9 +191,16 @@ def play():
 	sounda = pygame.mixer.Sound(filename)
 	sounda.play()
 	#winsound.PlaySound(filename, winsound.SND_FILENAME)
-	
+
+def trim(ori_path = 'record_data/record.wav', fpath = 'record_data/trimmed.wav'):
+    myaudio = AudioSegment.from_wav(ori_path)
+    audios = silence.split_on_silence(myaudio, min_silence_len=600, silence_thresh=-40, keep_silence=100)            
+    for audio in audios:
+        audio.export(fpath, format = "wav")            
+        break
 	
 def playtrimmed():    
+	trim()
 	filename = 'record_data/trimmed.wav'
 	pygame.init()
 	pygame.mixer.init()
@@ -201,15 +208,16 @@ def playtrimmed():
 	sounda.play()
 #     winsound.PlaySound(filename, winsound.SND_FILENAME)
 
-def trim(record_path='record_data/', name = 'trimmed.wav'):
-	input_path = record_path + 'record.wav'
-	output_path = record_path + name
-	sound = AudioSegment.from_file(input_path, format="wav")
-	start_trim = detect_leading_silence(sound)
-	end_trim = detect_leading_silence(sound.reverse())
-	duration = len(sound)
-	trimmed_sound = sound[start_trim:duration-end_trim]    
-	trimmed_sound.export(output_path, format="wav")
+# def trim(record_path='record_data/', name = 'trimmed.wav'):
+# 	input_path = record_path + 'record.wav'
+# 	output_path = record_path + name
+# 	sound = AudioSegment.from_file(input_path, format="wav")
+# 	start_trim = detect_leading_silence(sound)
+# 	end_trim = detect_leading_silence(sound.reverse())
+# 	duration = len(sound)
+# 	print(start_trim, end_trim)
+# 	trimmed_sound = sound[start_trim:duration-end_trim]    
+# 	trimmed_sound.export(output_path, format="wav")
 
 def predict_new():
 	trim()
@@ -278,6 +286,9 @@ def gui():
 	btn_playback = tk.Button(master=frame2, width=13, height=2, text="Playback", command=play)
 	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
 
+	btn_playback = tk.Button(master=frame2, width=13, height=2, text="Play trim", command=playtrimmed)
+	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
+
 	btn_predict = tk.Button(master=frame3, width=13, height=2, text="Predict", command=predict_new)
 	btn_predict.pack(side=tk.LEFT, padx=5, pady=5)
 
@@ -313,14 +324,6 @@ def gui_validate():
 	print(val)
 	messagebox.showinfo('Notification', val)
 
-def main():
-	X, y = read_data()
-	X_train, y_train, X_test, y_test = split_data(X, y)
-	model = train(X_train)
-	model = load_model()
-	val = validate(X_test, y_test, model)
-	print(val)
-	gui()
 
 
 def trimxxx(pathx):
@@ -337,10 +340,18 @@ def trimxxx(pathx):
 			duration = len(sound)
 			trimmed_sound = sound[start_trim:duration-end_trim]    
 			trimmed_sound.export(output_path, format="wav")
+def main():
+	X, y = read_data()
+	X_train, y_train, X_test, y_test = split_data(X, y)
+	model = train(X_train)
+	model = load_model()
+	val = validate(X_test, y_test, model)
+	print(val)
+	gui()
 
 
 if __name__ == '__main__':
-	# pathx = '/Users/bangdo/code/school/speech_processing/speech_processing/test/'
+	# pathx = '/Users/bangdo/code/school/speech_processing/speech_processing/datax/'
 	# trimxxx(pathx)
 	main()
 
