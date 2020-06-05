@@ -1,0 +1,12 @@
+base64
+wave
+numpy
+pickle
+hmmlearn
+librosa
+scikit-learn
+tkinter
+pygame
+pydub
+ffmpeg
+pyaudio
