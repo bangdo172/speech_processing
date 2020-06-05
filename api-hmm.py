@@ -18,10 +18,10 @@ import pyaudio
 import wave
 from base64 import b64decode
 
-class_names = ['khong', 'nhieu', 'thoigian', 'nguoi', 'tien']
-n_states = [9, 12, 19, 12, 12]
+class_names = ['dich', 'nhieu', 'thoigian', 'nguoi', 'tien']
+n_states = [9, 9, 19, 9, 9]
 # build data
-path = 'datax/'
+path = 'data'
 # path = '/Users/bangdo/code/school/speech_processing/speech_processing/test/trimmed'
 def get_mfcc(filename):
 	y, sr = librosa.load(filename) # read .wav file
@@ -70,9 +70,11 @@ def train(X_train):
 		start_prob[0] = 1.0
 		trans_matrix = np.full((n_states[idx], n_states[idx]), 0.0)
 		np.fill_diagonal(trans_matrix, 0.5)
-		np.fill_diagonal(trans_matrix[0:, 1:], 0.5)
-		np.fill_diagonal(trans_matrix[0:, 2:], 0.5)
+		np.fill_diagonal(trans_matrix[0:, 1:], 0.4)
+		np.fill_diagonal(trans_matrix[0:, 2:], 0.1)
+		trans_matrix[-2,-1] = 0.5
 		trans_matrix[-1,-1] = 1.0
+		print(trans_matrix)
 		
 		model[key] = hmm.GaussianHMM(
 			n_components=n_states[idx], 
@@ -123,6 +125,7 @@ def load_model():
 	model_path = 'models/'
 	for x in class_names:
 		model[x] = pickle.load(open(model_path + x, 'rb'))
+		# print(model[x].transmat_)
 	return model
 
 
@@ -224,7 +227,7 @@ def predict_new():
 	#Predict
 	record_mfcc = get_mfcc("record_data/trimmed.wav")
 	model = load_model()
-	scores = [model[cname].score(record_mfcc) for cname in class_names]
+	scores = [model[cname].score(record_mfcc,[len(record_mfcc)]) for cname in class_names]
 	pred = np.argmax(scores)
 	messagebox.showinfo("result", class_names[pred])
 
@@ -274,23 +277,23 @@ def gui():
 	label = tk.Label(master=frame0, text="Speech recognition")
 	label.pack(padx=5, pady=10)
 
-	btn_playback = tk.Button(master=frame4, width=13, height=2, text="Train", command = gui_train)
-	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
+	btn_playback = tk.Button(master=frame4, width=10, height=2, text="Train", command = gui_train)
+	btn_playback.pack(side=tk.LEFT, padx=15, pady=15)
 
-	btn_playback = tk.Button(master=frame4, width=13, height=2, text="Validate", command = gui_validate)
-	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
+	btn_playback = tk.Button(master=frame4, width=10, height=2, text="Validate", command = gui_validate)
+	btn_playback.pack(side=tk.LEFT, padx=15, pady=15)
 
-	btn_record = tk.Button(master=frame1, width=13, height=2, text="Record", command=record)
-	btn_record.pack(side=tk.LEFT, padx=5, pady=5)
+	btn_record = tk.Button(master=frame1, width=10, height=4, text="Record", command=record)
+	btn_record.pack(side=tk.LEFT, padx=15, pady=15)
 
-	btn_playback = tk.Button(master=frame2, width=13, height=2, text="Playback", command=play)
-	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
+	btn_playback = tk.Button(master=frame2, width=10, height=2, text="Playback", command=play)
+	btn_playback.pack(side=tk.LEFT, padx=15, pady=15)
 
-	btn_playback = tk.Button(master=frame2, width=13, height=2, text="Play trim", command=playtrimmed)
-	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
+	btn_playback = tk.Button(master=frame2, width=10, height=2, text="Play trim", command=playtrimmed)
+	btn_playback.pack(side=tk.LEFT, padx=15, pady=15)
 
-	btn_predict = tk.Button(master=frame3, width=13, height=2, text="Predict", command=predict_new)
-	btn_predict.pack(side=tk.LEFT, padx=5, pady=5)
+	btn_predict = tk.Button(master=frame3, width=10, height=4, text="Predict", command=predict_new)
+	btn_predict.pack(side=tk.LEFT, padx=15, pady=15)
 
 
 
@@ -299,7 +302,7 @@ def gui():
 
 	btn_playback = tk.Button(master=lb, width=5, height=2, text="Người", command= lambda: retrain('nguoi'))
 	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
-	btn_playback = tk.Button(master=lb, width=5, height=2, text="Không", command= lambda: retrain('khong'))
+	btn_playback = tk.Button(master=lb, width=5, height=2, text="Dịch", command= lambda: retrain('dich'))
 	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
 	btn_playback = tk.Button(master=lb, width=5, height=2, text="Nhiều", command= lambda: retrain('nhieu'))
 	btn_playback.pack(side=tk.LEFT, padx=5, pady=5)
@@ -341,12 +344,12 @@ def trimxxx(pathx):
 			trimmed_sound = sound[start_trim:duration-end_trim]    
 			trimmed_sound.export(output_path, format="wav")
 def main():
-	X, y = read_data()
-	X_train, y_train, X_test, y_test = split_data(X, y)
-	model = train(X_train)
-	model = load_model()
-	val = validate(X_test, y_test, model)
-	print(val)
+	# X, y = read_data()
+	# X_train, y_train, X_test, y_test = split_data(X, y)
+	# model = train(X_train)
+	# model = load_model()
+	# val = validate(X_test, y_test, model)
+	# print(val)
 	gui()
 
 
